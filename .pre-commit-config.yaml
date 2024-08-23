@@ -1,29 +1,79 @@
 default_language_version:
-  python: python3
-
-fail_fast: false
+  python: python3.10
 
 repos:
+  - repo: local
+    hooks:
+      - id: dashes-in-folders
+        name: folders must not contain dashes
+        entry: folders must not contain dashes
+        language: fail
+        files: "-.*/.*"
+      - id: dashes-in-filenames
+        name: source files must not contain dashes
+        entry: source files must not contain dashes
+        language: fail
+        files: '-.*\.(py)$'
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: "v0.4.2"
+    hooks:
+      - id: ruff
+        args: [--fix, --show-fixes, --exit-non-zero-on-fix]
+  - repo: https://github.com/google/yapf
+    rev: v0.40.2
+    hooks:
+      - id: yapf
+        args: [-i, --style, .style.yapf]
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.6.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
-      - id: mixed-line-ending
-      - id: check-merge-conflict
-      - id: detect-private-key
       - id: check-json
-      - id: check-toml
+      - id: check-added-large-files
+      - id: pretty-format-json
+        args: [--autofix]
+      - id: double-quote-string-fixer
+        types: [python]
+      - id: check-ast
+      - id: check-case-conflict
+      - id: check-merge-conflict
       - id: check-yaml
-
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.1.6
+      - id: debug-statements
+  - repo: https://github.com/myint/autoflake.git
+    rev: v2.3.1
     hooks:
-      - id: ruff
-        args: ["--fix"]
-      - id: ruff-format
-
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.7.1
+      - id: autoflake # removes unused imports
+        args: [--remove-all-unused-imports, --ignore-init-module-imports, -i]
+  - repo: https://github.com/asottile/reorder_python_imports
+    rev: v3.12.0
     hooks:
-      - id: mypy
+      - id: reorder-python-imports
+        args: [--py37-plus]
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.9.0.5
+    hooks:
+      - id: shellcheck
+        # SC1091 warns if shellcheck can not follow a file (because it
+        # encounters a reference to a .sh file that was not in the list of
+        # modified files). This warning is disabled by default for pre-commit
+        # hooks, but explicitly added here because `args` is modified.
+        #
+        # SC2207 warns against using `array=( $(mycommand) )`, but in our case
+        # 'mycommand' is usually a function we wrote ourselves to be compatible
+        #  with default word splitting.
+        args: ["--exclude=SC1091,SC2207"]
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.1.0
+    hooks:
+      - id: prettier
+        exclude_types: [json]
+        # Fix node version to <v18 is required on Ubuntu 18.04.
+        language_version: 16.14.2
+        language: node
+        pass_filenames: true
+        "types": [text]
+        require_serial: false
+        entry:
+          prettier --write --list-different --ignore-unknown --prose-wrap always
+default_stages: [commit]

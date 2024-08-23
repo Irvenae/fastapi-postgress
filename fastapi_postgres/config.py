@@ -8,12 +8,12 @@ logging.basicConfig(level=logging.INFO)
 class Settings(BaseSettings):
     """App settings."""
 
-    project_name: str = "alchemist"
+    project_name: str = 'alchemist'
     debug: bool = False
-    environment: str = "local"
+    environment: str = 'local'
 
     # Database
-    database_url: str = ""
+    database_url: str = ''
 
 
 settings = Settings()

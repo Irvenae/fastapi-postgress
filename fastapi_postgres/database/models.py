@@ -1,6 +1,9 @@
 import uuid
 
-from sqlalchemy import Column, ForeignKey, Table, orm
+from sqlalchemy import Column
+from sqlalchemy import ForeignKey
+from sqlalchemy import orm
+from sqlalchemy import Table
 from sqlalchemy.dialects.postgresql import UUID
 
 
@@ -14,17 +17,17 @@ class Base(orm.DeclarativeBase):
 
 
 potion_ingredient_association = Table(
-    "potion_ingredient",
+    'potion_ingredient',
     Base.metadata,
-    Column("potion_id", UUID(as_uuid=True), ForeignKey("potion.pk")),
-    Column("ingredient_id", UUID(as_uuid=True), ForeignKey("ingredient.pk")),
+    Column('potion_id', UUID(as_uuid=True), ForeignKey('potion.pk')),
+    Column('ingredient_id', UUID(as_uuid=True), ForeignKey('ingredient.pk')),
 )
 
 
 class Ingredient(Base):
     """Ingredient database model."""
 
-    __tablename__ = "ingredient"
+    __tablename__ = 'ingredient'
 
     name: orm.Mapped[str]
 
@@ -32,11 +35,11 @@ class Ingredient(Base):
 class Potion(Base):
     """Potion database model."""
 
-    __tablename__ = "potion"
+    __tablename__ = 'potion'
 
     name: orm.Mapped[str]
-    ingredients: orm.Mapped[list["Ingredient"]] = orm.relationship(
+    ingredients: orm.Mapped[list['Ingredient']] = orm.relationship(
         secondary=potion_ingredient_association,
-        backref="potions",
-        lazy="selectin",
+        backref='potions',
+        lazy='selectin',
     )

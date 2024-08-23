@@ -10,4 +10,4 @@ done
 
 echo "Postgres started"
 
-uvicorn alchemist.app:app --reload --host "0.0.0.0" --port "8000"
+uvicorn fastapi_postgres.app:app --reload --host "0.0.0.0" --port "8000"

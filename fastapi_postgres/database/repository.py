@@ -1,12 +1,14 @@
 import uuid
-from typing import Generic, TypeVar
+from typing import Generic
+from typing import TypeVar
 
-from sqlalchemy import BinaryExpression, select
+from sqlalchemy import BinaryExpression
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from alchemist.database import models
+from fastapi_postgres.database import models
 
-Model = TypeVar("Model", bound=models.Base)
+Model = TypeVar('Model', bound=models.Base)
 
 
 class DatabaseRepository(Generic[Model]):

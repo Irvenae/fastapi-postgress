@@ -1,7 +1,6 @@
 version: "3.8"
 
-x-default-app:
-  &default-app
+x-default-app: &default-app
   build:
     context: .
     target: dev
@@ -28,7 +27,7 @@ services:
       # Run a command after the container starts to create the test database
       - ./scripts/create_test_db.sh:/docker-entrypoint-initdb.d/create_test_db.sh
     environment:
-      - POSTGRES_DB=alchemist
+      - POSTGRES_DB=fastapi_postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     ports:
